@@ -210,21 +210,17 @@ export class AppComponent implements OnInit {
     // web component 的索引不能递增，因为索引重置后会重复，而且cache后apply会有冲突。
     const index = String(Math.random()).substring(2),
       tagName = `${AppComponent.tagNamePrefix}-${index}`;
-    const { html, css, className } = option;
-    let styleStr = '';
-    for (let [key, value] of Object.entries(css)) {
-      // @ts-ignore
-      styleStr += `${key}:${value.value}${value.postfix || ''};`;
-    }
+    const { html, className } = option;
+
     let config: any = {};
-    Object.keys(html).map((key) => {
+    Object.keys({}).map((key) => {
       config[key] = transformValue(html[key]);
     });
     return {
       tagName: `${tagName}`,
       html: `<${tagName} _data="_ngElementStrategy.componentRef.instance"
                         _methods="_ngElementStrategy.componentRef.instance" 
-                       style="${styleStr}"></${tagName}>`,
+                       ></${tagName}>`,
       js: `class MyEchartsGLMap${index} extends ${className}{
              constructor(){
                  super();
