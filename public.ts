@@ -7,7 +7,7 @@ const components = [
     {
       id: 'echarts-gl',
       type: 'node',
-      icon: 'global',
+      icon: '#icon-a-2',
       title: `echartsGL:
                     Angular@16.1+echarts+echarts-gl`,
       view: 4,
@@ -18,7 +18,8 @@ const components = [
     },
   ],
   file = 'dist/my-echarts-gl/';
-const http = require('http'),
+const fs = require('fs'),
+  path = require('path'),
   request = require('request');
 const filesName = [
   { name: 'main.js', decorator: { defer: true } },
@@ -27,51 +28,65 @@ const filesName = [
   //   { name: 'vendor.js', decorator: { defer: true } },
   'styles.css',
 ];
+const area = 'echarts-gl',
+  folderPath = './dist/my-echarts-gl';
+//@ts-ignore
+components.map((item) => {
+  //@ts-ignore
+  item['filesName'] = filesName;
+  //@ts-ignore
+  item['area'] = area;
+});
 let options = {
   url: 'http://127.0.0.1:3000/upload',
   method: 'POST',
-  json: true,
   headers: {
-    'content-type': 'application/json',
+    'content-type': 'multipart/form-data',
   },
-  body: {},
-};
-let files = [],
-  area = 'echarts-gl';
-filesName.forEach((fileName) => {
-  let name = typeof fileName == 'string' ? fileName : fileName.name;
-  let content = require('fs').readFileSync(file + name);
-  let buffer = Buffer.from(content);
-  files.push({
-    name,
-    content: buffer.toString(),
-  });
-});
-
-let componentsConfig = components.map((item) => {
-  return {
-    ...item,
-    filesName: [...filesName, { name: 'iconfont.js', decorator: {} }],
+  formData: {
+    files: [],
     area,
-  };
-});
-request(
-  {
-    ...options,
-    body: {
-      code: 200,
-      data: {
-        components: componentsConfig,
-        content: files,
-        area,
-      },
-    },
+    components: JSON.stringify(components),
   },
-  (err, res, body) => {
-    if (res.statusCode === 200) {
-      console.log(filesName, res.statusCode, '上传完成');
+};
+
+// @ts-ignore 递归遍历文件夹中的所有文件
+function uploadFolder(folderPath, dir) {
+  const files = fs.readdirSync(folderPath);
+  //@ts-ignore
+  files.forEach((file) => {
+    const filePath = folderPath + '/' + file;
+    // 判断是否为文件夹
+    if (fs.statSync(filePath).isDirectory()) {
+      // 递归上传子文件夹
+      uploadFolder(filePath, dir + '/' + file);
     } else {
-      console.log(body);
+      // 上传文件
+      uploadFile(filePath, dir, file);
     }
+  });
+}
+
+// @ts-ignore 缓存上传文件
+function uploadFile(filePath, dir, fileName) {
+  const content = fs.readFileSync(path.resolve(__dirname, filePath));
+  //@ts-ignore
+  options.formData.files.push({
+    content: Buffer.from(content).toString(),
+    dir,
+    fileName,
+  });
+}
+// 将文件缓存
+uploadFolder(folderPath, '');
+console.log('共上传文件数：', options.formData.files.length);
+//@ts-ignore
+options.formData.files = JSON.stringify(options.formData.files);
+//@ts-ignore
+request(options, (err, res, body) => {
+  if (res.statusCode === 200) {
+    console.log('上传完成');
+  } else {
+    console.log(body);
   }
-);
+});
