@@ -17,7 +17,7 @@ const components = [
       component: 'EchartsGLComponent',
     },
   ],
-  file = 'dist/my-echarts-gl/';
+  folderPath = 'dist/my-echarts-gl';
 const fs = require('fs'),
   path = require('path'),
   request = require('request');
@@ -28,8 +28,7 @@ const filesName = [
   //   { name: 'vendor.js', decorator: { defer: true } },
   'styles.css',
 ];
-const area = 'echarts-gl',
-  folderPath = './dist/my-echarts-gl';
+const area = 'echarts-gl';
 //@ts-ignore
 components.map((item) => {
   //@ts-ignore
