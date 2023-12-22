@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
       // this.chart.setOption(option);
     });
     chartObserver.observe(this.map.nativeElement);
-    resizeCenter.pipe(debounceTime(1000)).subscribe((res) => {
+    resizeCenter.pipe(debounceTime(500)).subscribe((res) => {
       this.chart.resize();
     });
   }
@@ -60,9 +60,9 @@ export class AppComponent implements OnInit {
             detailTexture: './1.png',
           },
           itemStyle: {
-            borderWidth: 1.5,
-            borderColor: '#5FB9DA',
-            color: '#6597D0',
+            borderWidth: 1,
+            borderColor: '#00468d',
+            color: '#00194e',
             opacity: 1,
           },
           label: {
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
               fontSize: 40,
             },
             formatter: (e: any) => {
-              return ` ${e.name} `;
+              return ` `;
             },
           },
         },
@@ -110,8 +110,12 @@ export class AppComponent implements OnInit {
             symbol: 'circle',
             symbolSize: 10,
             itemStyle: {
-              color: 'green',
-              opacity: 0.8,
+              normal: {
+                color: 'red',
+                shadowBlur: 10,
+                shadowColor: '#0a99ff',
+                shadowOffsetY: 0,
+              },
             },
             emphasis: {
               label: {
@@ -130,11 +134,18 @@ export class AppComponent implements OnInit {
             coordinateSystem: 'geo3D',
             effect: {
               show: true,
-              period: 4,
+              period: 8,
+              trailLength: 0.5,
+              symbol: 'arrow',
+              symbolSize: 8,
             },
             lineStyle: {
-              color: 'red',
-              width: 2,
+              normal: {
+                color: '#43D0FF',
+                curveness: 0.5,
+                width: 1,
+                opacity: 1,
+              },
             },
             data: [
               [
