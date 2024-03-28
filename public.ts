@@ -6,6 +6,7 @@
 const components = [
     {
       id: 'echarts-gl',
+      name:"echarts-3D-地图",
       type: 'node',
       icon: '#icon-a-2',
       title: `echartsGL:
