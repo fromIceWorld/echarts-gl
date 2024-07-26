@@ -6,12 +6,12 @@
 const components = [
     {
       id: 'echarts-gl',
-      name:"echarts-3D-地图",
+      name: 'echarts-3D-地图',
       type: 'node',
       icon: '#icon-a-2',
       title: `echartsGL:
                     Angular@16.1+echarts+echarts-gl`,
-      view: 4,
+      view: 0,
       family: 'chart',
       color: '#e167d1',
       des: '基础的echarts-gl',
